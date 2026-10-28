@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7c4dff">
+  <title>CC</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <!-- Tela de PIN (modo discreto) -->
+  <div id="tela-pin" class="tela">
+    <h2>Digite seu PIN</h2>
+    <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
+    <button onclick="verificarPin()">Entrar</button>
+    <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
+  </div>
+
+  <!-- App principal -->
+  <div id="app" class="tela" hidden>
+    <header>
+      <h1>CicloCuidar</h1>
+      <button class="btn-sair" onclick="sairRapido()" aria-label="Saída rápida">✕</button>
+    </header>
+
+    <nav class="abas" role="tablist">
+      <button class="aba ativa" onclick="mostrarAba('ciclo')">Ciclo</button>
+      <button class="aba" onclick="mostrarAba('vio')">Violentômetro</button>
+      <button class="aba" onclick="mostrarAba('biblioteca')">Biblioteca</button>
+    </nav>
+
+    <!-- ABA CICLO -->
+    <section id="aba-ciclo" class="painel">
+      <h2>Meu ciclo</h2>
+      <label for="data-menstruacao">Primeiro dia da menstruação:</label>
+      <input type="date" id="data-menstruacao">
+      <button onclick="registrarMenstruacao()">Registrar</button>
+
+      <div id="previsao" class="card" aria-live="polite"></div>
+
+      <h3>Como me sinto hoje?</h3>
+      <div id="lista-sintomas" class="sintomas"></div>
+      <button onclick="salvarSintomas()">Salvar dia</button>
+    </section>
+
+    <!-- ABA VIOLENTÔMETRO -->
+    <section id="aba-vio" class="painel" hidden>
+      <h2>Reconhecer para Romper</h2>
+      <p class="intro">Baseado no Violentômetro, validado em pesquisa com 563 mulheres
+         (Ciência & Saúde Coletiva, 2026). Isso não é diagnóstico — é autoconhecimento.</p>
+      <div id="perguntas-vio"></div>
+      <button onclick="verResultadoVio()">Ver meu resultado</button>
+      <div id="resultado-vio" class="card" aria-live="polite"></div>
+    </section>
+
+    <!-- ABA BIBLIOTECA -->
+    <section id="aba-biblioteca" class="painel" hidden>
+      <h2>Biblioteca</h2>
+      <div id="lista-artigos"></div>
+      <div id="artigo" class="card"></div>
+      <footer class="fonte">Conteúdo baseado na Cartilha "Cuidados em Saúde da Mulher",
+        IFF/Fiocruz. Não substitui consulta médica.</footer>
+    </section>
+
+    <!-- Botão de emergência sempre visível -->
+    <a class="btn-180" href="tel:180">🆘 Ligar 180 (discreto)</a>
+  </div>
+
+  <script src="js/banco.js"></script>
+  <script src="js/ciclo.js"></script>
+  <script src="js/violentometro.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
