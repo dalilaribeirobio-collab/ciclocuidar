@@ -1,0 +1,27 @@
+/* Tema neutro + acessibilidade: alvos grandes, alto contraste */
+* { box-sizing: border-box; font-size: 18px; }
+body { font-family: sans-serif; margin: 0; background: #f5f4f8; color: #241f36; }
+.tela { max-width: 480px; margin: 0 auto; padding: 20px; }
+header { display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 24px; color: #5e35b1; }
+button, .aba { min-height: 48px; padding: 12px 16px; border: none; border-radius: 8px;
+  background: #7c4dff; color: #fff; font-weight: bold; cursor: pointer; }
+.btn-sair { background: transparent; color: #5e35b1; font-size: 24px; }
+.abas { display: flex; gap: 8px; margin: 16px 0; }
+.aba { background: #e6e1f2; color: #5e35b1; }
+.aba.ativa { background: #5e35b1; color: #fff; }
+.card { background: #fff; border-radius: 12px; padding: 16px; margin: 12px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+.aviso { color: #c62828; }
+.fonte { font-size: 14px; color: #666; margin-top: 20px; }
+.sintomas label, #perguntas-vio label { display: block; padding: 10px; margin: 6px 0;
+  background: #fff; border-radius: 8px; }
+input[type="date"], input[type="password"] { padding: 12px; border-radius: 8px;
+  border: 2px solid #7c4dff; width: 100%; max-width: 300px; margin: 8px 0; }
+.btn-180 { display: block; text-align: center; padding: 14px; margin: 20px 0;
+  background: #ffebee; color: #c62828; border-radius: 8px; text-decoration: none; font-weight: bold; }
+.intro { background: #ede7f6; padding: 10px; border-radius: 8px; font-size: 16px; }
+/* Domínios do Violentômetro (cores da escala de gravidade do TJPB) */
+.dom-cuidado { border-left: 6px solid #fbc02d; }
+.dom-reakao { border-left: 6px solid #fb8c00; }
+.dom-perigo { border-left: 6px solid #c62828; }
