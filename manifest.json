@@ -1,0 +1,9 @@
+{
+  "name": "CicloCuidar",
+  "short_name": "CC",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f5f4f8",
+  "theme_color": "#7c4dff",
+  "icons": [{ "src": "/icone.png", "sizes": "192x192", "type": "image/png" }]
+}
