@@ -1,35 +1,79 @@
-// Abre o banco local (IndexedDB) — promessa única reutilizada
-let _db = null;
+// ============================================
+// CicloCuidar — banco.js
+// Armazenamento local (IndexedDB) — nada sai do aparelho
+// ============================================
+
+const NOME_BANCO = "croclocuidar";
+const VERSAO_BANCO = 2; // v2: loja "config" para o PIN personalizado
+
+const LOJAS = ["ciclos", "sintomas", "violentometro", "config"];
+
+let banco = null;
+
 function abrirBanco() {
-  if (_db) return Promise.resolve(_db);
-  return new Promise((resolve, reject) => {
-    const pedido = indexedDB.open("croclocuidar", 1);
-    pedido.onupgradeneeded = (e) => {
+  return new Promise((resolver, rejeitar) => {
+    if (banco) return resolver(banco);
+    const req = indexedDB.open(NOME_BANCO, VERSAO_BANCO);
+    req.onupgradeneeded = (e) => {
       const db = e.target.result;
-      db.createObjectStore("ciclo", { keyPath: "data" });
-      db.createObjectStore("dias", { keyPath: "data" });
-      db.createObjectStore("config", { keyPath: "chave" });
+      LOJAS.forEach((nome) => {
+        if (!db.objectStoreNames.contains(nome)) {
+          // "config" usa chave própria ("pin"); as outras usam id automático
+          if (nome === "config") {
+            db.createObjectStore(nome, { keyPath: "chave" });
+          } else {
+            db.createObjectStore(nome, { keyPath: "id", autoIncrement: true });
+          }
+        }
+      });
     };
-    pedido.onsuccess = (e) => { _db = e.target.result; resolve(_db); };
-    pedido.onerror = (e) => reject(e);
+    req.onsuccess = (e) => { banco = e.target.result; resolver(banco); };
+    req.onerror = (e) => rejeitar(e.target.error);
   });
 }
 
+// ---------- Operações genéricas ----------
+
 async function salvar(loja, objeto) {
   const db = await abrirBanco();
-  return new Promise((res, rej) => {
+  return new Promise((resolver, rejeitar) => {
     const tx = db.transaction(loja, "readwrite");
-    tx.objectStore(loja).put(objeto);
-    tx.oncomplete = res; tx.onerror = rej;
+    if (loja === "config") {
+      tx.objectStore(loja).put(objeto); // put: cria ou atualiza pela chave
+    } else {
+      tx.objectStore(loja).add(objeto);
+    }
+    tx.oncomplete = () => resolver(true);
+    tx.onerror = (e) => rejeitar(e.target.error);
   });
 }
 
 async function listar(loja) {
   const db = await abrirBanco();
-  return new Promise((res, rej) => {
+  return new Promise((resolver, rejeitar) => {
     const tx = db.transaction(loja, "readonly");
-    const pedido = tx.objectStore(loja).getAll();
-    pedido.onsuccess = () => res(pedido.result);
-    pedido.onerror = rej;
+    const req = tx.objectStore(loja).getAll();
+    req.onsuccess = () => resolver(req.result);
+    req.onerror = (e) => rejeitar(e.target.error);
+  });
+}
+
+async function apagar(loja, id) {
+  const db = await abrirBanco();
+  return new Promise((resolver, rejeitar) => {
+    const tx = db.transaction(loja, "readwrite");
+    tx.objectStore(loja).delete(id);
+    tx.oncomplete = () => resolver(true);
+    tx.onerror = (e) => rejeitar(e.target.error);
+  });
+}
+
+// Apaga TUDO (para a exportação futura, futura "apagar minha conta")
+async function apagarTudo() {
+  const db = await abrirBanco();
+  return new Promise((resolver) => {
+    const tx = db.transaction(LOJAS, "readwrite");
+    LOJAS.forEach((nome) => tx.objectStore(nome).clear());
+    tx.oncomplete = () => resolver(true);
   });
 }
