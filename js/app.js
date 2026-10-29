@@ -1,8 +1,12 @@
-// ---- PIN personalizado (armazenado apenas no aparelho) ----
-const _db = () => abrirBanco();
+// ============================================
+// CicloCuidar — app.js
+// PIN personalizável, sessão, abas e biblioteca
+// ============================================
+
+// ---------- PIN personalizado (armazenado apenas no aparelho) ----------
 
 async function salvarPin(pin) {
-  // Armazenamos um hash simples — nunca o PIN em texto puro
+  // Guardamos um hash simples — nunca o PIN em texto puro
   const hash = btoa(unescape(encodeURIComponent(pin.split("").reverse().join("") + "#cc")));
   await salvar("config", { chave: "pin", valor: hash });
 }
@@ -10,7 +14,7 @@ async function salvarPin(pin) {
 async function obterPinSalvo() {
   const itens = await listar("config");
   const pin = itens.find((i) => i.chave === "pin");
-  return pin ? pin.valor : null;
+  return pin && pin.valor ? pin.valor : null;
 }
 
 function hashIgual(pinDigitado, hashSalvo) {
@@ -18,11 +22,12 @@ function hashIgual(pinDigitado, hashSalvo) {
   return hashDigitado === hashSalvo;
 }
 
-function entrar(pin) {
+function entrar() {
   sessionStorage.setItem("sessao", "ok");
   document.getElementById("tela-pin").hidden = true;
   document.getElementById("tela-criar-pin").hidden = true;
   document.getElementById("app").hidden = false;
+  document.getElementById("erro-pin").hidden = true;
   calcularPrevisao();
 }
 
@@ -46,26 +51,24 @@ async function criarPin() {
     return;
   }
   await salvarPin(novo);
-  entrar(novo);
+  entrar();
 }
 
 async function verificarPin() {
   const pin = document.getElementById("pin").value;
   const hashSalvo = await obterPinSalvo();
   if (hashSalvo && hashIgual(pin, hashSalvo)) {
-    entrar(pin);
+    entrar();
   } else {
     document.getElementById("erro-pin").hidden = false;
+    document.getElementById("pin").value = "";
   }
 }
 
-// Fluxo de recuperação: pergunta de segurança em vez de PIN por e-mail
-// (app não tem servidor — nada sai do aparelho)
+// Redefinição: apaga apenas o PIN; os registros de ciclo e sintomas são preservados
 function mostrarTrocarPin() {
-  if (confirm("Para redefinir o PIN, seus registros de PIN serão apagados e você criará um novo. Seus registros de ciclo e sintomas NÃO são perdidos. Deseja continuar?")) {
-    navigator.serviceWorker; // apenas para lembrar: nada é enviado a servidor
-    // Redefinição: apaga apenas a entrada do PIN; o usuário cria um novo
-    _db().then(() => salvar("config", { chave: "pin", valor: null })).then(() => {
+  if (confirm("Para redefinir o PIN, você criará um novo agora. Seus registros de ciclo e sintomas NÃO são perdidos. Continuar?")) {
+    salvar("config", { chave: "pin", valor: null }).then(() => {
       sessionStorage.removeItem("sessao");
       location.reload();
     });
@@ -75,48 +78,89 @@ function mostrarTrocarPin() {
 function sairRapido() {
   sessionStorage.removeItem("sessao");
   document.getElementById("app").hidden = true;
-  // Se já criou PIN, mostra login; senão, criação
   obterPinSalvo().then((hash) => {
     document.getElementById(hash ? "tela-pin" : "tela-criar-pin").hidden = false;
   });
   document.getElementById("pin").value = "";
 }
 
-// ---- Navegação por abas ----
+// ---------- Navegação por abas ----------
+
 function mostrarAba(nome) {
-  ["ciclo", "vio", "biblioteca"].forEach(a => {
-    document.getElementById("aba-" + a).hidden = (a !== nome);
+  ["ciclo", "vio", "biblioteca"].forEach((n) => {
+    document.getElementById("aba-" + n).hidden = n !== nome;
   });
-  document.querySelectorAll(".aba").forEach((b, i) =>
-    b.classList.toggle("ativa", ["ciclo","vio","biblioteca"][i] === nome));
+  document.querySelectorAll(".aba").forEach((b, i) => {
+    b.classList.toggle("ativa", ["ciclo", "vio", "biblioteca"][i] === nome);
+  });
 }
 
-// ---- Biblioteca: artigos resumidos da Cartilha IFF/Fiocruz ----
-const ARTIGOS = {
-  "Endometriose": "O tecido do útero cresce fora dele. Sintomas: cólica forte, dor pélvica, dor nas relações, alterações intestinais, infertilidade. O tempo até o diagnóstico é de ~7 anos — registrar sintomas (como o app faz) acelera a conversa com o médico.",
-  "SOP": "Distúrbio hormonal comum (2 milhões de brasileiras). Sinais: menstruações espaçadas, pelos no rosto, acne, obesidade. O tratamento depende da fase da vida; perder peso reverte parte do quadro.",
-  "Câncer de mama": "Sinais: pele tipo casca de laranja, inversão do mamilo, nódulo endurecido, vermelhidão. Mamografia de rotina a partir dos 40 anos. Diagnóstico precoce salva vidas.",
-  "Câncer do colo do útero": "Um dos cânceres com maior potencial de prevenção. Sinais: sangramento após relação, corrimento fétido, dor pélvica contínua. Exame preventivo (Papanicolau) detecta lesões antes de virarem câncer.",
-  "Menopausa": "12 meses sem menstruar. Pode vir com ondas de calor, insônia, secura vaginal, variações de humor. Tratamento integrado: reposição hormonal quando indicada, exercício, alimentação e apoio psicológico.",
-  "Osteoporose": "1 em cada 3 mulheres acima dos 65 anos. Prevenção: cálcio, exercício e sol 3x/semana (15 min sem filtro). Densitometria é o exame padrão-ouro."
-};
+// ---------- Biblioteca (baseada na Cartilha Fiocruz) ----------
+
+const ARTIGOS = [
+  {
+    titulo: "Conheça seu ciclo menstrual",
+    resumo: "Fases, duração normal e sinais de alerta.",
+    corpo: "O ciclo menstrual varia de 21 a 35 dias. Conhecer o seu padrão é a base do autocuidado. Sangramento fora do período esperado, cólicas incapacitantes ou ciclos muito irregulares merecem avaliação profissional."
+  },
+  {
+    titulo: "Prevenção do câncer do colo do útero",
+    resumo: "Papanicolau: quando e por quê.",
+    corpo: "O Papanicolau deve ser feito a partir dos 25 anos (ou início da vida sexual) e repetido conforme orientação profissional. Vacinar contra o HPV é a prevenção mais eficaz."
+  },
+  {
+    titulo: "Câncer de mama: autoexame e mamografia",
+    resumo: "Sinais de alerta e rastreamento.",
+    corpo: "Observe alterações no tamanho, forma e textura das mamas e procure avaliação médica. A mamografia de rastreamento é indicada a partir dos 40 anos, conforme protocolo do Ministério da Saúde."
+  },
+  {
+    titulo: "Planejamento reprodutivo",
+    resumo: "Métodos contraceptivos: uma visão geral.",
+    corpo: "Existem métodos hormonais, de barreira e definitivos. Cada mulher responde melhor a um tipo diferente — a escolha deve ser feita com orientação profissional嵬 profissional de saúde, considerando sua saúde e seu momento de vida."
+  },
+  {
+    titulo: "ISTs: proteger é cuidar de si",
+    resumo: "Sinais, prevenção e onde buscar atendimento.",
+    corpo: "Coceira, corrimento com odor forte, feridas ou dor ao urinar são sinais de alerta. O preservativo previne ISTs. O tratamento é gratuito no SUS econfidencial."
+  },
+  {
+    titulo: "Climatério e menopausa",
+    resumo: "O que muda no corpo e como aliviar os sintomas.",
+    corpo: "A queda hormonal traz ondas de calor, alterações de sono e humor. Há tratamentos e hábitos que aliviam: atividade física, alimentação e acompanhamento médico regular."
+  }
+];
 
 function montarBiblioteca() {
-  document.getElementById("lista-artigos").innerHTML =
-    Object.keys(ARTIGOS).map(t => `<button onclick="abrirArtigo('${t}')">${t}</button><br>`).join("");
-}
-function abrirArtigo(titulo) {
-  document.getElementById("artigo").innerHTML = `<h3>${titulo}</h3><p>${ARTIGOS[titulo]}</p>`;
+  const lista = document.getElementById("lista-artigos");
+  lista.innerHTML = ARTIGOS.map((a, i) =>
+    '<button class="aba" style="display:block; margin:8px 0; text-align:left" onclick="abrirArtigo(' + i + ')">' +
+    a.titulo + '<br><small style="opacity:.75">' + a.resumo + "</small></button>"
+  ).join("");
 }
 
-// ---- Inicialização ----
+function abrirArtigo(i) {
+  const a = ARTIGOS[i];
+  document.getElementById("lista-artigos").hidden = true;
+  const box = document.getElementById("artigo");
+  box.innerHTML =
+    '<button class="btn-link" onclick="voltarBiblioteca()">← Voltar</button>' +
+    "<h3>" + a.titulo + "</h3><p>" + a.corpo + "</p>";
+  box.hidden = false;
+}
+
+function voltarBiblioteca() {
+  document.getElementById("artigo").hidden = true;
+  document.getElementById("lista-artigos").hidden = false;
+}
+
+// ---------- Inicialização ----------
+
 window.addEventListener("load", () => {
   montarSintomas();
   montarViolentometro();
   montarBiblioteca();
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");
 
-  // Decide qual tela mostrar: criar PIN (primeiro uso) ou login
   obterPinSalvo().then((hash) => {
     if (sessionStorage.getItem("sessao") === "ok") {
       document.getElementById("app").hidden = false;
