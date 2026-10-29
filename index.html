@@ -7,10 +7,12 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icone.png">
   <meta name="theme-color" content="#c26584">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
 
-<!-- Tela: criar PIN (primeira visita) -->
+<!-- Tela: criar PIN -->
 <div class="tela" id="tela-criar-pin" hidden>
   <h1>🌸 CicloCuidar</h1>
   <p class="intro">Bem-vinda! Crie um PIN de 4 dígitos para proteger seus registros. Ele fica salvo apenas no seu aparelho.</p>
@@ -32,7 +34,7 @@
   <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
 </div>
 
-<!-- App principal -->
+<!-- App -->
 <div class="tela" id="app" hidden>
   <header>
     <h1>🌸 CicloCuidar</h1>
@@ -46,6 +48,7 @@
     <button class="aba" data-aba="quiz">Quiz</button>
   </nav>
 
+  <!-- Aba Ciclo -->
   <section id="aba-ciclo">
     <h2>Seu ciclo</h2>
     <label for="data-menstruacao">Primeiro dia da menstruação</label>
@@ -58,6 +61,7 @@
     <p class="fonte">Seus dados ficam somente no seu aparelho. Previsões são orientativas e NÃO são método contraceptivo.</p>
   </section>
 
+  <!-- Aba Violentômetro -->
   <section id="aba-vio" hidden>
     <h2>Reconhecer para Romper</h2>
     <p class="intro">Marque os comportamentos que você já viveu ou presenciou. Não há pontuação nem diagnóstico — é autoconhecimento.</p>
@@ -68,6 +72,7 @@
     <p class="fonte">Baseado no Violentômetro validado com 563 mulheres (Ciência & Saúde Coletiva, 2026). Educacional.</p>
   </section>
 
+  <!-- Aba Biblioteca -->
   <section id="aba-biblioteca" hidden>
     <h2>Biblioteca</h2>
     <div id="lista-artigos"></div>
@@ -75,9 +80,10 @@
     <p class="fonte">Conteúdo baseado na Cartilha Cuidados em Saúde da Mulher (IFF/Fiocruz).</p>
   </section>
 
+  <!-- Aba Quiz -->
   <section id="aba-quiz" hidden>
     <h2>Trilhas de aprendizado</h2>
-    <p class="intro">Teste o que você sabe — e aprenda o que falta. Sem notas, sem julgamento: cada resposta é uma chance de aprender algo que protege sua saúde. 💜</p>
+    <p class="intro">Teste o que você sabe — e aprenda o que falta. Sem notas, sem julgamento. 💜</p>
     <p id="quiz-progresso" class="fonte"></p>
     <div id="quiz-lista"></div>
     <div id="quiz-jogo" hidden>
