@@ -44,6 +44,7 @@
       <button class="aba ativa" onclick="mostrarAba('ciclo')">Ciclo</button>
       <button class="aba" onclick="mostrarAba('vio')">Violentômetro</button>
       <button class="aba" onclick="mostrarAba('biblioteca')">Biblioteca</button>
+      <button class="aba" onclick="mostrarAba('quiz')">Quiz</button>
     </nav>
 
     <!-- ABA CICLO -->
@@ -78,6 +79,18 @@
       <footer class="fonte">Conteúdo baseado na Cartilha "Cuidados em Saúde da Mulher",
         IFF/Fiocruz. Não substitui consulta médica.</footer>
     </section>
+
+    <section id="aba-quiz" hidden>
+  <h2>Trilhas de aprendizado</h2>
+  <p class="intro">Teste o que você sabe — e aprenda o que falta. Sem notas, sem julgamento: cada resposta é uma chance de aprender algo que protege sua saúde. 💜</p>
+  <p id="quiz-progresso" class="fonte"></p>
+  <div id="quiz-lista"></div>
+  <div id="quiz-jogo" hidden>
+    <h3 id="quiz-titulo"></h3>
+    <div id="quiz-pergunta"></div>
+  </div>
+  <div id="quiz-resultado" hidden></div>
+</section>
 
     <!-- Botão de emergência sempre visível -->
     <a class="btn-180" href="tel:180">🆘 Ligar 180 (discreto)</a>
