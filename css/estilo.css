@@ -1,7 +1,7 @@
 /* ============================================
    CicloCuidar — Identidade "Aconchego"
    Paleta rosada-terrosa · Tipografia delicada
-   Acessibilidade mantida: alvos ≥44px, contraste AA
+   Acessibilidade: alvos ≥44px, contraste WCAG AA
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
@@ -12,14 +12,14 @@
   --acao: #c26584;            /* rosa antigo */
   --acao-press: #a84e6e;      /* rosa pressionado */
   --texto: #5d3a4a;           /* terracota escura */
-  --texto-suave: #8c6b78;      /* texto secundário */
-  --aba: #f7e3dd;              /* pêssego (aba inativa) */
+  --texto-suave: #8c6b78;     /* texto secundário */
+  --aba: #f7e3dd;             /* pêssego (aba inativa) */
   --borda-suave: #f0dcd6;
-  --alerta: #b03a5b;           /* framboesa (avisos) */
-  --sucesso: #7d9b76;          /* verde salvia suave */
+  --alerta: #b03a5b;          /* framboesa (avisos) */
 }
 
 * { box-sizing: border-box; }
+
 body {
   font-family: 'Quicksand', sans-serif;
   font-size: 18px;
@@ -32,7 +32,7 @@ body {
 /* Estrutura geral */
 .tela { max-width: 480px; margin: 0 auto; padding: 24px 20px; }
 
-/* Cabeçalho — mais respirável e gentil */
+/* Cabeçalho */
 header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 8px 0 16px;
@@ -43,10 +43,10 @@ header h1 {
   letter-spacing: 0.5px; margin: 0;
 }
 
-/* Botões e abas: cantos macios, toque acolhedor */
+/* Botões e abas: cápsulas arredondadas, toque acolhedor */
 button, .aba {
   min-height: 48px; padding: 12px 20px;
-  border: none; border-radius: 24px;              /* cápsula arredondada */
+  border: none; border-radius: 24px;
   background: var(--acao); color: #fff;
   font-weight: 600; font-family: 'Quicksand', sans-serif;
   font-size: 16px; cursor: pointer;
@@ -63,7 +63,7 @@ button:active { background: var(--acao-press); transform: scale(.98); }
 .aba { background: var(--aba); color: var(--acao); box-shadow: none; font-weight: 600; }
 .aba.ativa { background: var(--acao); color: #fff; }
 
-/* Cartões: bordas macias e sombra difusa */
+/* Cartões */
 .card {
   background: var(--cartao);
   border-radius: 20px;
@@ -100,7 +100,7 @@ input[type="date"], input[type="password"] {
 }
 input:focus { outline: 3px solid var(--aba); border-color: var(--acao-press); }
 
-/* Botão de emergência — sério, mas dentro da paleta */
+/* Botão de emergência 180 */
 .btn-180 {
   display: block; text-align: center; padding: 14px; margin: 20px 0;
   background: #fbe9ec; color: var(--alerta);
@@ -108,15 +108,15 @@ input:focus { outline: 3px solid var(--aba); border-color: var(--acao-press); }
   border: 1px solid var(--alerta);
 }
 
-/* Botão-link discreto */
+/* Botão-link discreto (esqueci/trocar PIN) */
 .btn-link { background: transparent; color: var(--acao);
   text-decoration: underline; min-height: 44px; box-shadow: none; }
 
-/* Domínios do Violentômetro (cores de gravidade suavizadas, mantendo a leitura) */
-.dom-cuidado { border-left: 6px solid #f6c453; border-radius: 8px; }  /* âmbar suave */
-.dom-reakao  { border-left: 6px solid #f0a868; border-radius: 8px; }  /* laranja suave */
+/* Domínios do Violentômetro — gravidade mantida, tons suavizados */
+.dom-cuidado { border-left: 6px solid #f6c453; border-radius: 8px; }
+.dom-reakao  { border-left: 6px solid #f0a868; border-radius: 8px; }
 .dom-perigo  { border-left: 6px solid var(--alerta); border-radius: 8px; }
 
-/* Títulos internos das seções */
+/* Títulos internos */
 h2 { color: var(--acao); font-size: 22px; font-weight: 700; }
 h3 { color: var(--acao-press); font-size: 18px; font-weight: 600; }
