@@ -1,53 +1,139 @@
-// Itens do Violentômetro organizados nos 3 domínios (Gomes et al., 2026 — TJPB 2023)
-const VIOLENTOMETRO = {
+// ============================================
+// CicloCuidar — violentometro.js
+// Violentômetro educativo (Ciência & Saúde Coletiva, 2026)
+// ⚠️ NÃO é diagnóstico e NÃO gera pontuação de risco:
+//    é uma ferramenta de reconhecimento e conscientização
+// ============================================
+
+// 27 comportamentos distribuídos em 3 domínios validados:
+// Cuidado, Reação e Perigo Real
+const PERGUNTAS_VIO = [
+  // ---- Domínio 1: CUIDADO (comportamentos sutis de controle) ----
+  { texto: "Quis saber onde você está o tempo todo", dominio: "cuidado" },
+  { texto: "Criticou seu jeito de se vestir", dominio: "cuidado" },
+  { texto: "Criticou seu corpo ou sua aparência", dominio: "cuidado" },
+  { texto: "Ficou com ciúme de seus amigos e familiares", dominio: "cuidado" },
+  { texto: "Criticou ou menosprezou suas opiniões", dominio: "cuidado" },
+  { texto: "Fez piadas que te deixaram constrangida na frente de outros", dominio: "cuidado" },
+  { texto: "Cobrou que você fizesse apenas o que ele(a) queria", dominio: "cuidado" },
+  { texto: "Vigiou ou monitorou suas redes sociais e mensagens", dominio: "cuidado" },
+  { texto: "Decidiu como você deveria gastar seu dinheiro", dominio: "cuidado" },
+
+  // ---- Domínio 2: REAÇÃO (escalada de agressividade) ----
+  { texto: "Gritou com você quando estava irritado(a)", dominio: "reakao" },
+  { texto: "Bateu porta ou quebrou objetos em momentos de raiva", dominio: "reakao" },
+  { texto: "Ameaçou se machucar se você o(a) deixasse", dominio: "reakao" },
+  { texto: "Culpou você por seus próprios comportamentos", dominio: "reakao" },
+  { texto: "Te chamou por apelidos que te humilhavam", dominio: "reakao" },
+  { texto: "Te proibiu de sair ou ver amigos e familiares", dominio: "reakao" },
+  { texto: "Reagiu com desprezo quando você expressou sentimentos", dominio: "reakao" },
+  { texto: "Controlou o uso do seu celular ou o privou dele", dominio: "reakao" },
+  { texto: "Empurrou ou segurou você com força durante uma briga", dominio: "reakao" },
+
+  // ---- Domínio 3: PERIGO REAL (violência explícita) ----
+  { texto: "Te ameaçou fisicamente, com objeto ou arma", dominio: "perigo" },
+  { texto: "Bateu, chutou ou agrediu você fisicamente", dominio: "perigo" },
+  { texto: "Forçou relações sexuais sem seu consentimento", dominio: "perigo" },
+  { texto: "Ameaçou machucar seus filhos ou familiares", dominio: "perigo" },
+  { texto: "Te prendeu em casa ou impediu que você pedisse ajuda", dominio: "perigo" },
+  { texto: "Ameaçou você com faca, arma ou outro objeto", dominio: "perigo" },
+  { texto: "Estrangulou ou sufocou você", dominio: "perigo" },
+  { texto: "Descumpriu medida protetiva de afastamento", dominio: "perigo" },
+  { texto: "Só para de te agredir quando outra pessoa aparece", dominio: "perigo" }
+];
+
+const INFO_DOMINIO = {
   cuidado: {
-    titulo: "Domínio de Cuidado (atenção!)",
-    itens: ["Piadas ofensivas", "Chantagear", "Mentir/enganar", "Ignorar/dar um gelo",
-            "Ciúmes", "Culpar", "Desqualificar", "Ridicularizar/ofender",
-            "Humilhar em público", "Intimidar/ameaçar", "Controlar/proibir"]
+    titulo: "Sinais de Cuidado Disfarçado",
+    classe: "dom-cuidado",
+    orientacao:
+      "Comportamentos de controle e vigilância costumam ser apresentados como 'ciúme' ou 'zelo', mas minam a autonomia aos poucos. Reconhecê-los cedo é uma forma poderosa de prevenção."
   },
-  reacao: {
-    titulo: "Domínio de Reação",
-    itens: ["Destruir bens pessoais", "Machucar", "Tapinhos/pancadinhas",
-            "Brincar de bater", "Beliscar/arranhar", "Empurrar", "Dar tapas"]
+  reakao: {
+    titulo: "Sinais de Reação Agressiva",
+    classe: "dom-reakao",
+    orientacao:
+      "Gritos, ameaças de autodano e isolamento social indicam escalada. Nenhuma briga justifica agressão — nem física, nem verbal. Você não merece isso, em nenhuma circunstância."
   },
   perigo: {
-    titulo: "Domínio de Perigo Real",
-    itens: ["Chutar", "Confinar/prender", "Ameaçar com objetos", "Ameaçar com armas",
-            "Ameaçar de morte", "Forçar relação sexual", "Abuso sexual",
-            "Violentar", "Mutilar"]
+    titulo: "Sinais de Perigo Real",
+    classe: "dom-perigo",
+    orientacao:
+      "Agressão física, ameaça com arma, estrangulamento e descumprimento de medida protetiva são crime e colocam sua vida em risco. Procure ajuda com segurança — você não precisa enfrentar isso sozinha."
   }
 };
 
+// ---------- Montagem da tela ----------
+
 function montarViolentometro() {
-  const div = document.getElementById("perguntas-vio");
-  let html = "";
-  for (const [chave, dom] of Object.entries(VIOLENTOMETRO)) {
-    html += `<h3>${dom.titulo}</h3>`;
-    html += dom.itens.map((item, i) =>
-      `<label class="${chave === "cuidado" ? "dom-cuidado" : chave === "reacao" ? "dom-reakao" : "dom-perigo"}">
-        <input type="checkbox" class="vio" data-dom="${chave}"> Ele(a) ${item.toLowerCase()} com você?</label>`).join("");
-  }
-  div.innerHTML = html;
+  const box = document.getElementById("perguntas-vio");
+  box.innerHTML = PERGUNTAS_VIO.map(
+    (p, i) =>
+      '<label class="' + INFO_DOMINIO[p.dominio].classe + '">' +
+      '<input type="checkbox" data-dominio="' + p.dominio + '"> ' +
+      p.texto + "</label>"
+  ).join("");
 }
 
-function verResultadoVio() {
-  const marcadas = { cuidado: 0, reacao: 0, perigo: 0 };
-  document.querySelectorAll(".vio:checked").forEach(c => marcadas[c.dataset.dom]++);
-  let msg = "";
-  if (marcadas.perigo > 0) {
-    msg = "Você marcou situações de <b>Perigo Real</b>. Isso é grave e você não merece viver assim. " +
-          "<b>Ligue 180 agora</b> ou procure a UBS/CRAS mais próximo — a rede existe para acolher você.";
-  } else if (marcadas.reacao > 0) {
-    msg = "Você marcou situações do <b>Domínio de Reação</b>. A violência tende a escalar com o tempo. " +
-          "Conversar com um profissional da UBS pode ajudar antes que piore.";
-  } else if (marcadas.cuidado > 0) {
-    msg = "Você marcou situações que parecem pequenas — mas a pesquisa mostra que a " +
-          "<b>violência psicológica é o degrau inicial</b> da mesma escada que termina em violência física. " +
-          "Ciúme e controle não são prova de amor.";
-  } else {
-    msg = "Nenhuma situação marcada. Se algo mudar na sua relação, volte aqui — este espaço é seu.";
+// ---------- Resultado (educativo, sem pontuação) ----------
+
+async function verResultadoVio() {
+  const box = document.getElementById("resultado-vio");
+  const marcados = Array.from(
+    document.querySelectorAll("#perguntas-vio input:checked")
+  );
+  const data = new Date().toISOString().slice(0, 10);
+
+  // Registra a reflexão localmente (para a usuária ver seu histórico)
+  await salvar("violentometro", {
+    data: data,
+    reconheceu: marcados.map((i) => i.dataset.dominio)
+  });
+
+  if (marcados.length === 0) {
+    box.innerHTML =
+      "<p>Você não marcou nenhum comportamento. Conhecer esses sinais " +
+      "também é proteção — para você e para as mulheres ao seu redor. 💜</p>" +
+      '<p class="fonte">Se algum dia reconhecer qualquer um deles, ' +
+      "saiba que há ajuda disponível.</p>";
+    return;
   }
-  document.getElementById("resultado-vio").innerHTML =
-    msg + `<p class="fonte">Isso é educação, não diagnóstico. Para acolhimento: 180, UBS ou CRAS.</p>`;
+
+  // Conta quantos sinais de cada domínio foram reconhecidos
+  const contagem = { cuidado: 0, reakao: 0, perigo: 0 };
+  marcados.forEach((i) => contagem[i.dataset.dominio]++);
+
+  let html =
+    "<h3>O que reconheceu</h3>" +
+    "<p>Reconhecer um comportamento não significa que você está " +
+    "em uma situação sem saída — significa que está enxergando com clareza. " +
+    "Isso é o primeiro passo.</p>";
+
+  if (contagem.perigo > 0) {
+    html +=
+      '<div class="card ' + INFO_DOMINIO.perigo.classe + '">' +
+      "<h3>⚠️ " + INFO_DOMINIO.perigo.titulo + "</h3>" +
+      "<p>" + INFO_DOMINIO.perigo.orientacao + "</p>" +
+      '<a class="btn-180" href="tel:180">Ligar 180 agora</a></div>';
+  }
+  if (contagem.reakao > 0) {
+    html +=
+      '<div class="card ' + INFO_DOMINIO.reakao.classe + '">' +
+      "<h3>" + INFO_DOMINIO.reakao.titulo + "</h3>" +
+      "<p>" + INFO_DOMINIO.reakao.orientacao + "</p></div>";
+  }
+  if (contagem.cuidado > 0) {
+    html +=
+      '<div class="card ' + INFO_DOMINIO.cuidado.classe + '">' +
+      "<h3>" + INFO_DOMINIO.cuidado.titulo + "</h3>" +
+      "<p>" + INFO_DOMINIO.cuidado.orientacao + "</p></div>";
+  }
+
+  html +=
+    '<p class="fonte">Você pode conversar de forma gratuita e sigilosa ' +
+    'com a <strong>Central de Atendimento à Mulher — 180</strong>, ' +
+    "24 horas por dia. Se houver risco imediato, ligue <strong>190</strong>.</p>";
+
+  box.innerHTML = html;
+  box.hidden = false;
 }
