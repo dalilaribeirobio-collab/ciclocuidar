@@ -87,11 +87,11 @@ function sairRapido() {
 // ---------- Navegação por abas ----------
 
 function mostrarAba(nome) {
-  ["ciclo", "vio", "biblioteca"].forEach((n) => {
+  ["ciclo", "vio", "biblioteca", "quiz"].forEach((n) => {
     document.getElementById("aba-" + n).hidden = n !== nome;
   });
-  document.querySelectorAll(".aba").forEach((b, i) => {
-    b.classList.toggle("ativa", ["ciclo", "vio", "biblioteca"][i] === nome);
+  document.querySelectorAll(".aba").forEach((b) => {
+    b.classList.toggle("ativa", ["ciclo", "vio", "biblioteca", "quiz"][i] === nome);
   });
 }
 
