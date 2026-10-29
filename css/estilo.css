@@ -1,29 +1,122 @@
-/* Tema neutro + acessibilidade: alvos grandes, alto contraste */
-* { box-sizing: border-box; font-size: 18px; }
-body { font-family: sans-serif; margin: 0; background: #f5f4f8; color: #241f36; }
-.tela { max-width: 480px; margin: 0 auto; padding: 20px; }
-header { display: flex; justify-content: space-between; align-items: center; }
-header h1 { font-size: 24px; color: #5e35b1; }
-button, .aba { min-height: 48px; padding: 12px 16px; border: none; border-radius: 8px;
-  background: #7c4dff; color: #fff; font-weight: bold; cursor: pointer; }
-.btn-sair { background: transparent; color: #5e35b1; font-size: 24px; }
-.abas { display: flex; gap: 8px; margin: 16px 0; }
-.aba { background: #e6e1f2; color: #5e35b1; }
-.aba.ativa { background: #5e35b1; color: #fff; }
-.card { background: #fff; border-radius: 12px; padding: 16px; margin: 12px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08); }
-.aviso { color: #c62828; }
-.fonte { font-size: 14px; color: #666; margin-top: 20px; }
-.sintomas label, #perguntas-vio label { display: block; padding: 10px; margin: 6px 0;
-  background: #fff; border-radius: 8px; }
-input[type="date"], input[type="password"] { padding: 12px; border-radius: 8px;
-  border: 2px solid #7c4dff; width: 100%; max-width: 300px; margin: 8px 0; }
-.btn-180 { display: block; text-align: center; padding: 14px; margin: 20px 0;
-  background: #ffebee; color: #c62828; border-radius: 8px; text-decoration: none; font-weight: bold; }
-.intro { background: #ede7f6; padding: 10px; border-radius: 8px; font-size: 16px; }
-.btn-link { background: transparent; color: #5e35b1; text-decoration: underline;
-  min-height: 44px; }
-/* Domínios do Violentômetro (cores da escala de gravidade do TJPB) */
-.dom-cuidado { border-left: 6px solid #fbc02d; }
-.dom-reakao { border-left: 6px solid #fb8c00; }
-.dom-perigo { border-left: 6px solid #c62828; }
+/* ============================================
+   CicloCuidar — Identidade "Aconchego"
+   Paleta rosada-terrosa · Tipografia delicada
+   Acessibilidade mantida: alvos ≥44px, contraste AA
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+:root {
+  --fundo: #fdf6f0;          /* creme rosado */
+  --cartao: #fffdf9;          /* branco quente */
+  --acao: #c26584;            /* rosa antigo */
+  --acao-press: #a84e6e;      /* rosa pressionado */
+  --texto: #5d3a4a;           /* terracota escura */
+  --texto-suave: #8c6b78;      /* texto secundário */
+  --aba: #f7e3dd;              /* pêssego (aba inativa) */
+  --borda-suave: #f0dcd6;
+  --alerta: #b03a5b;           /* framboesa (avisos) */
+  --sucesso: #7d9b76;          /* verde salvia suave */
+}
+
+* { box-sizing: border-box; }
+body {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 18px;
+  margin: 0;
+  background: var(--fundo);
+  background-image: radial-gradient(circle at 20% 0%, #fceee9 0%, var(--fundo) 60%);
+  color: var(--texto);
+}
+
+/* Estrutura geral */
+.tela { max-width: 480px; margin: 0 auto; padding: 24px 20px; }
+
+/* Cabeçalho — mais respirável e gentil */
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--borda-suave);
+}
+header h1 {
+  font-size: 26px; font-weight: 700; color: var(--acao);
+  letter-spacing: 0.5px; margin: 0;
+}
+
+/* Botões e abas: cantos macios, toque acolhedor */
+button, .aba {
+  min-height: 48px; padding: 12px 20px;
+  border: none; border-radius: 24px;              /* cápsula arredondada */
+  background: var(--acao); color: #fff;
+  font-weight: 600; font-family: 'Quicksand', sans-serif;
+  font-size: 16px; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(194, 101, 132, .25);
+  transition: background .15s ease, transform .1s ease;
+}
+button:active { background: var(--acao-press); transform: scale(.98); }
+
+.btn-sair { background: transparent; color: var(--acao); font-size: 24px;
+  box-shadow: none; min-width: 44px; }
+
+/* Navegação por abas */
+.abas { display: flex; gap: 8px; margin: 16px 0 20px; }
+.aba { background: var(--aba); color: var(--acao); box-shadow: none; font-weight: 600; }
+.aba.ativa { background: var(--acao); color: #fff; }
+
+/* Cartões: bordas macias e sombra difusa */
+.card {
+  background: var(--cartao);
+  border-radius: 20px;
+  padding: 18px;
+  margin: 12px 0;
+  box-shadow: 0 3px 12px rgba(140, 107, 120, .12);
+  border: 1px solid var(--borda-suave);
+}
+
+/* Textos */
+.aviso { color: var(--alerta); }
+.fonte { font-size: 14px; color: var(--texto-suave); margin-top: 20px; }
+.intro {
+  background: var(--aba); padding: 12px 14px; border-radius: 14px;
+  font-size: 16px; line-height: 1.5; color: var(--texto);
+}
+
+/* Checkbox-labels (sintomas e Violentômetro) */
+.sintomas label, #perguntas-vio label {
+  display: block; padding: 12px 10px; margin: 6px 0;
+  background: var(--cartao); border-radius: 14px;
+  border: 1px solid var(--borda-suave);
+  transition: background .15s ease;
+}
+.sintomas label:active, #perguntas-vio label:active { background: var(--aba); }
+
+/* Campos de entrada */
+input[type="date"], input[type="password"] {
+  padding: 12px; border-radius: 14px;
+  border: 2px solid var(--acao);
+  width: 100%; max-width: 300px; margin: 8px 0;
+  font-family: 'Quicksand', sans-serif; color: var(--texto);
+  background: var(--cartao);
+}
+input:focus { outline: 3px solid var(--aba); border-color: var(--acao-press); }
+
+/* Botão de emergência — sério, mas dentro da paleta */
+.btn-180 {
+  display: block; text-align: center; padding: 14px; margin: 20px 0;
+  background: #fbe9ec; color: var(--alerta);
+  border-radius: 24px; text-decoration: none; font-weight: bold;
+  border: 1px solid var(--alerta);
+}
+
+/* Botão-link discreto */
+.btn-link { background: transparent; color: var(--acao);
+  text-decoration: underline; min-height: 44px; box-shadow: none; }
+
+/* Domínios do Violentômetro (cores de gravidade suavizadas, mantendo a leitura) */
+.dom-cuidado { border-left: 6px solid #f6c453; border-radius: 8px; }  /* âmbar suave */
+.dom-reakao  { border-left: 6px solid #f0a868; border-radius: 8px; }  /* laranja suave */
+.dom-perigo  { border-left: 6px solid var(--alerta); border-radius: 8px; }
+
+/* Títulos internos das seções */
+h2 { color: var(--acao); font-size: 22px; font-weight: 700; }
+h3 { color: var(--acao-press); font-size: 18px; font-weight: 600; }
