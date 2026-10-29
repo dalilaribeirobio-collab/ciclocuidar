@@ -1,13 +1,7 @@
-// ============================================
-// CicloCuidar — banco.js
-// Armazenamento local (IndexedDB) — nada sai do aparelho
-// ============================================
-
+// CicloCuidar — banco.js (IndexedDB, 100% local)
 const NOME_BANCO = "croclocuidar";
-const VERSAO_BANCO = 2; // v2: loja "config" para o PIN personalizado
-const VERSAO_BANCO = 3; // v3: loja "quiz"
+const VERSAO_BANCO = 1;
 const LOJAS = ["ciclos", "sintomas", "violentometro", "config", "quiz"];
-
 
 let banco = null;
 
@@ -19,7 +13,6 @@ function abrirBanco() {
       const db = e.target.result;
       LOJAS.forEach((nome) => {
         if (!db.objectStoreNames.contains(nome)) {
-          // "config" usa chave própria ("pin"); as outras usam id automático
           if (nome === "config") {
             db.createObjectStore(nome, { keyPath: "chave" });
           } else {
@@ -33,17 +26,24 @@ function abrirBanco() {
   });
 }
 
-// ---------- Operações genéricas ----------
-
 async function salvar(loja, objeto) {
   const db = await abrirBanco();
   return new Promise((resolver, rejeitar) => {
     const tx = db.transaction(loja, "readwrite");
-    if (loja === "config") {
-      tx.objectStore(loja).put(objeto); // put: cria ou atualiza pela chave
-    } else {
-      tx.objectStore(loja).add(objeto);
-    }
+    if (loja === "config") { tx.objectStore(loja).put(objeto); }
+    else { tx.objectStore(loja).add(objeto); }
+    tx.oncomplete = () => resolver(true);
+    tx.onerror = (e) => rejeitar(e.target.error);
+  });
+}
+
+async function atualizar(loja, id, objeto) {
+  const db = await abrirBanco();
+  return new Promise((resolver, rejeitar) => {
+    const tx = db.transaction(loja, "readwrite");
+    const store = tx.objectStore(loja);
+    objeto.id = id;
+    store.put(objeto);
     tx.oncomplete = () => resolver(true);
     tx.onerror = (e) => rejeitar(e.target.error);
   });
@@ -61,20 +61,9 @@ async function listar(loja) {
 
 async function apagar(loja, id) {
   const db = await abrirBanco();
-  return new Promise((resolver, rejeitar) => {
+  return new Promise((resolver) => {
     const tx = db.transaction(loja, "readwrite");
     tx.objectStore(loja).delete(id);
-    tx.oncomplete = () => resolver(true);
-    tx.onerror = (e) => rejeitar(e.target.error);
-  });
-}
-
-// Apaga TUDO (para a exportação futura, futura "apagar minha conta")
-async function apagarTudo() {
-  const db = await abrirBanco();
-  return new Promise((resolver) => {
-    const tx = db.transaction(LOJAS, "readwrite");
-    LOJAS.forEach((nome) => tx.objectStore(nome).clear());
     tx.oncomplete = () => resolver(true);
   });
 }
