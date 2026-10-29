@@ -1,45 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- Ícone do PWA (instalação na tela inicial) -->
-<link rel="icon" href="icone.png" type="image/png">
-<link rel="apple-touch-icon" href="icone.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#7c4dff">
+  <meta name="theme-color" content="#c26584">
   <title>CC</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icone.png" type="image/png">
+  <link rel="apple-touch-icon" href="icone.png">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-<header>
-  <img src="icone.png" alt="CicloCuidar" style="width:36px; height:36px; border-radius:50%;">
-  <h1>CicloCuidar</h1>
-  <button class="btn-sair" onclick="sairRapido()" aria-label="Saída rápida">✕</button>
-</header>
- <!-- Tela de criação de PIN (primeiro acesso) -->
-<div id="tela-criar-pin" class="tela" hidden>
-  <h2>Crie seu PIN</h2>
-  <p class="intro">Escolha um PIN de 4 dígitos. Ele protege seus registros —
-     ninguém além de você consegue vê-los.</p>
-  <input type="password" id="novo-pin" maxlength="4" inputmode="numeric" placeholder="Novo PIN" aria-label="Novo PIN de 4 dígitos">
-  <input type="password" id="confirmar-pin" maxlength="4" inputmode="numeric" placeholder="Repita o PIN" aria-label="Repita o PIN">
-  <button onclick="criarPin()">Definir meu PIN</button>
-  <p id="erro-criar" class="aviso" hidden></p>
-</div>
 
-<!-- Tela de login -->
-<div id="tela-pin" class="tela" hidden>
-  <h2>Digite seu PIN</h2>
-  <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
-  <button onclick="verificarPin()">Entrar</button>
-  <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
-  <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
-</div>
+  <!-- Tela de criação de PIN (primeiro acesso) -->
+  <div id="tela-criar-pin" class="tela" hidden>
+    <h2>Crie seu PIN</h2>
+    <p class="intro">Escolha um PIN de 4 dígitos. Ele protege seus registros —
+       ninguém além de você consegue vê-los.</p>
+    <input type="password" id="novo-pin" maxlength="4" inputmode="numeric" placeholder="Novo PIN" aria-label="Novo PIN de 4 dígitos">
+    <input type="password" id="confirmar-pin" maxlength="4" inputmode="numeric" placeholder="Repita o PIN" aria-label="Repita o PIN">
+    <button onclick="criarPin()">Definir meu PIN</button>
+    <p id="erro-criar" class="aviso" hidden></p>
+  </div>
+
+  <!-- Tela de login -->
+  <div id="tela-pin" class="tela" hidden>
+    <h2>Digite seu PIN</h2>
+    <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
+    <button onclick="verificarPin()">Entrar</button>
+    <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
+    <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
+  </div>
 
   <!-- App principal -->
   <div id="app" class="tela" hidden>
     <header>
+      <img src="icone.png" alt="CicloCuidar" style="width:36px; height:36px; border-radius:50%;">
       <h1>CicloCuidar</h1>
       <button class="btn-sair" onclick="sairRapido()" aria-label="Saída rápida">✕</button>
     </header>
