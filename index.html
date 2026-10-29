@@ -3,103 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#c26584">
-  <title>CC</title>
+  <title>CicloCuidar</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icone.png" type="image/png">
-  <link rel="apple-touch-icon" href="icone.png">
-  <link rel="stylesheet" href="css/estilo.css">
+  <link rel="icon" href="icone.png">
+  <meta name="theme-color" content="#c26584">
 </head>
 <body>
 
-  <!-- Tela de criação de PIN (primeiro acesso) -->
-  <div id="tela-criar-pin" class="tela" hidden>
-    <h2>Crie seu PIN</h2>
-    <p class="intro">Escolha um PIN de 4 dígitos. Ele protege seus registros —
-       ninguém além de você consegue vê-los.</p>
-    <input type="password" id="novo-pin" maxlength="4" inputmode="numeric" placeholder="Novo PIN" aria-label="Novo PIN de 4 dígitos">
-    <input type="password" id="confirmar-pin" maxlength="4" inputmode="numeric" placeholder="Repita o PIN" aria-label="Repita o PIN">
-    <button onclick="criarPin()">Definir meu PIN</button>
-    <p id="erro-criar" class="aviso" hidden></p>
-  </div>
+<!-- Tela: criar PIN (primeira visita) -->
+<div class="tela" id="tela-criar-pin" hidden>
+  <h1>🌸 CicloCuidar</h1>
+  <p class="intro">Bem-vinda! Crie um PIN de 4 dígitos para proteger seus registros. Ele fica salvo apenas no seu aparelho.</p>
+  <label for="novo-pin">Novo PIN (4 dígitos)</label>
+  <input type="password" id="novo-pin" maxlength="4" inputmode="numeric" autocomplete="off">
+  <label for="confirmar-pin">Confirmar PIN</label>
+  <input type="password" id="confirmar-pin" maxlength="4" inputmode="numeric" autocomplete="off">
+  <p id="erro-criar" class="aviso" hidden></p>
+  <button onclick="criarPin()">Começar</button>
+</div>
 
-  <!-- Tela de login -->
-  <div id="tela-pin" class="tela" hidden>
-    <h2>Digite seu PIN</h2>
-    <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
-    <button onclick="verificarPin()">Entrar</button>
-    <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
-    <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
-  </div>
+<!-- Tela: pedir PIN -->
+<div class="tela" id="tela-pin" hidden>
+  <h1>🌸 CicloCuidar</h1>
+  <p>Digite seu PIN para entrar.</p>
+  <input type="password" id="pin" maxlength="4" inputmode="numeric" autocomplete="off">
+  <p id="erro-pin" class="aviso" hidden>PIN incorreto. Tente novamente.</p>
+  <button onclick="verificarPin()">Entrar</button>
+  <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
+</div>
 
-  <!-- App principal -->
-  <div id="app" class="tela" hidden>
-    <header>
-      <img src="icone.png" alt="CicloCuidar" style="width:36px; height:36px; border-radius:50%;">
-      <h1>CicloCuidar</h1>
-      <button class="btn-sair" onclick="sairRapido()" aria-label="Saída rápida">✕</button>
-    </header>
+<!-- App principal -->
+<div class="tela" id="app" hidden>
+  <header>
+    <h1>🌸 CicloCuidar</h1>
+    <button class="btn-sair" onclick="sairRapido()" title="Sair">✕</button>
+  </header>
 
-    <nav class="abas" role="tablist">
-      <button class="aba ativa" onclick="mostrarAba('ciclo')">Ciclo</button>
-      <button class="aba" onclick="mostrarAba('vio')">Violentômetro</button>
-      <button class="aba" onclick="mostrarAba('biblioteca')">Biblioteca</button>
-      <button class="aba" onclick="mostrarAba('quiz')">Quiz</button>
-    </nav>
+  <nav class="abas">
+    <button class="aba" data-aba="ciclo">Ciclo</button>
+    <button class="aba" data-aba="vio">Violentômetro</button>
+    <button class="aba" data-aba="biblioteca">Biblioteca</button>
+    <button class="aba" data-aba="quiz">Quiz</button>
+  </nav>
 
-    <!-- ABA CICLO -->
-    <section id="aba-ciclo" class="painel">
-      <h2>Meu ciclo</h2>
-      <label for="data-menstruacao">Primeiro dia da menstruação:</label>
-      <input type="date" id="data-menstruacao">
-      <button onclick="registrarMenstruacao()">Registrar</button>
+  <section id="aba-ciclo">
+    <h2>Seu ciclo</h2>
+    <label for="data-menstruacao">Primeiro dia da menstruação</label>
+    <input type="date" id="data-menstruacao">
+    <button onclick="registrarMenstruacao()">Registrar</button>
+    <div id="previsao"></div>
+    <h3>Como você está se sentindo hoje?</h3>
+    <div class="sintomas" id="lista-sintomas"></div>
+    <button onclick="salvarSintomas()">Salvar meu dia</button>
+    <p class="fonte">Seus dados ficam somente no seu aparelho. Previsões são orientativas e NÃO são método contraceptivo.</p>
+  </section>
 
-      <div id="previsao" class="card" aria-live="polite"></div>
+  <section id="aba-vio" hidden>
+    <h2>Reconhecer para Romper</h2>
+    <p class="intro">Marque os comportamentos que você já viveu ou presenciou. Não há pontuação nem diagnóstico — é autoconhecimento.</p>
+    <div id="perguntas-vio"></div>
+    <button onclick="verResultadoVio()">Ver reflexão</button>
+    <div id="resultado-vio"></div>
+    <a class="btn-180" href="tel:180">🆘 Ligar 180 (Central de Atendimento à Mulher)</a>
+    <p class="fonte">Baseado no Violentômetro validado com 563 mulheres (Ciência & Saúde Coletiva, 2026). Educacional.</p>
+  </section>
 
-      <h3>Como me sinto hoje?</h3>
-      <div id="lista-sintomas" class="sintomas"></div>
-      <button onclick="salvarSintomas()">Salvar dia</button>
-    </section>
+  <section id="aba-biblioteca" hidden>
+    <h2>Biblioteca</h2>
+    <div id="lista-artigos"></div>
+    <div id="artigo" hidden></div>
+    <p class="fonte">Conteúdo baseado na Cartilha Cuidados em Saúde da Mulher (IFF/Fiocruz).</p>
+  </section>
 
-    <!-- ABA VIOLENTÔMETRO -->
-    <section id="aba-vio" class="painel" hidden>
-      <h2>Reconhecer para Romper</h2>
-      <p class="intro">Baseado no Violentômetro, validado em pesquisa com 563 mulheres
-         (Ciência & Saúde Coletiva, 2026). Isso não é diagnóstico — é autoconhecimento.</p>
-      <div id="perguntas-vio"></div>
-      <button onclick="verResultadoVio()">Ver meu resultado</button>
-      <div id="resultado-vio" class="card" aria-live="polite"></div>
-    </section>
+  <section id="aba-quiz" hidden>
+    <h2>Trilhas de aprendizado</h2>
+    <p class="intro">Teste o que você sabe — e aprenda o que falta. Sem notas, sem julgamento: cada resposta é uma chance de aprender algo que protege sua saúde. 💜</p>
+    <p id="quiz-progresso" class="fonte"></p>
+    <div id="quiz-lista"></div>
+    <div id="quiz-jogo" hidden>
+      <h3 id="quiz-titulo"></h3>
+      <div id="quiz-pergunta"></div>
+    </div>
+    <div id="quiz-resultado" hidden></div>
+  </section>
+</div>
 
-    <!-- ABA BIBLIOTECA -->
-    <section id="aba-biblioteca" class="painel" hidden>
-      <h2>Biblioteca</h2>
-      <div id="lista-artigos"></div>
-      <div id="artigo" class="card"></div>
-      <footer class="fonte">Conteúdo baseado na Cartilha "Cuidados em Saúde da Mulher",
-        IFF/Fiocruz. Não substitui consulta médica.</footer>
-    </section>
-
-    <section id="aba-quiz" hidden>
-  <h2>Trilhas de aprendizado</h2>
-  <p class="intro">Teste o que você sabe — e aprenda o que falta. Sem notas, sem julgamento: cada resposta é uma chance de aprender algo que protege sua saúde. 💜</p>
-  <p id="quiz-progresso" class="fonte"></p>
-  <div id="quiz-lista"></div>
-  <div id="quiz-jogo" hidden>
-    <h3 id="quiz-titulo"></h3>
-    <div id="quiz-pergunta"></div>
-  </div>
-  <div id="quiz-resultado" hidden></div>
-</section>
-
-    <!-- Botão de emergência sempre visível -->
-    <a class="btn-180" href="tel:180">🆘 Ligar 180 (discreto)</a>
-  </div>
-
-  <script src="js/banco.js"></script>
-  <script src="js/ciclo.js"></script>
-  <script src="js/violentometro.js"></script>
-  <script src="js/quiz.js"></script>
-  <script src="js/app.js"></script>
+<script src="js/banco.js"></script>
+<script src="js/ciclo.js"></script>
+<script src="js/violentometro.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
