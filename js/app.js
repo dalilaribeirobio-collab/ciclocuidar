@@ -13,8 +13,7 @@ async function obterPinSalvo() {
 }
 
 function hashIgual(pinDigitado, hashSalvo) {
-  const h = btoa(unescape(encodeURIComponent(pinDigitado.split("").reverse().join("") + "#cc")));
-  return h === hashSalvo;
+  return btoa(unescape(encodeURIComponent(pinDigitado.split("").reverse().join("") + "#cc"))) === hashSalvo;
 }
 
 function entrar() {
@@ -33,7 +32,7 @@ async function criarPin() {
   const confirmar = document.getElementById("confirmar-pin").value;
   const erro = document.getElementById("erro-criar");
   if (!/^\d{4}$/.test(novo)) { erro.textContent = "O PIN deve ter exatamente 4 dígitos."; erro.hidden = false; return; }
-  if (novo !== confirmar) { erro.textContent = "Os PINs não coincidem."; erro.hidden = false; return; }
+  if (novo !== confirmar) { erro.textContent = "Os PINs não coincidem. Digite novamente."; erro.hidden = false; return; }
   if (/^(\d)\1{3}$/.test(novo) || novo === "1234") { erro.textContent = "Escolha um PIN menos previsível (não 0000, 1111, 1234…)."; erro.hidden = false; return; }
   await salvarPin(novo);
   entrar();
@@ -68,15 +67,13 @@ function sairRapido() {
 }
 
 // ---------- Abas ----------
-const ABAS = ["ciclo", "vio", "biblioteca", "quiz"];
-const botoes = () => document.querySelectorAll("nav .aba");
-
 function mostrarAba(nome) {
-  ABAS.forEach((n) => {
+  ["ciclo", "vio", "biblioteca", "quiz"].forEach((n) => {
     const el = document.getElementById("aba-" + n);
     if (el) el.hidden = n !== nome;
   });
-  botoes().forEach((b) => b.classList.toggle("ativa", b.dataset.aba === nome));
+  document.querySelectorAll("nav .aba").forEach((b) =>
+    b.classList.toggle("ativa", b.dataset.aba === nome));
 }
 
 // ---------- Biblioteca ----------
@@ -86,13 +83,13 @@ const ARTIGOS = [
   { titulo: "Prevenção do câncer do colo do útero", resumo: "Papanicolau: quando e por quê.",
     corpo: "O Papanicolau deve ser feito a partir dos 25 anos (ou início da vida sexual), conforme orientação profissional. Vacinar contra o HPV é a prevenção mais eficaz." },
   { titulo: "Câncer de mama: autoexame e mamografia", resumo: "Sinais de alerta e rastreamento.",
-    corpo: "Observe alterações no tamanho, forma e textura das mamas. A mamografia de rastreamento é indicada a partir dos 40 anos." },
+    corpo: "Observe alterações no tamanho, forma e textura das mamas e procure avaliação médica. A mamografia de rastreamento é indicada a partir dos 40 anos." },
   { titulo: "Planejamento reprodutivo", resumo: "Métodos contraceptivos: uma visão geral.",
     corpo: "Existem métodos hormonais, de barreira e definitivos. A escolha deve ser feita com orientação profissional, considerando sua saúde e seu momento de vida." },
   { titulo: "ISTs: proteger é cuidar de si", resumo: "Sinais, prevenção e onde buscar atendimento.",
     corpo: "Coceira, corrimento com odor forte, feridas ou dor ao urinar são sinais de alerta. O preservativo previne ISTs. O tratamento no SUS é gratuito e confidencial." },
   { titulo: "Climatério e menopausa", resumo: "O que muda no corpo e como aliviar os sintomas.",
-    corpo: "A queda hormonal traz ondas de calor, alterações de sono e humor. Atividade física, alimentação e acompanhamento médico ajudam muito." }
+    corpo: "A queda hormonal traz ondas de calor, alterações de sono e humor. Atividade física, alimentação e acompanhamento médico regular ajudam muito." }
 ];
 
 function montarBiblioteca() {
@@ -122,7 +119,9 @@ window.addEventListener("load", () => {
   montarViolentometro();
   montarBiblioteca();
   montarQuizzes();
-  botoes().forEach((b) => b.addEventListener("click", () => mostrarAba(b.dataset.aba)));
+
+  document.querySelectorAll("nav .aba").forEach((b) =>
+    b.addEventListener("click", () => mostrarAba(b.dataset.aba)));
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 
