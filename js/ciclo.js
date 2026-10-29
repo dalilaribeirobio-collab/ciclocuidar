@@ -1,50 +1,121 @@
-const SINTOMAS = ["Cólica", "Dor de cabeça", "Humor baixo", "Ansiedade",
-                  "Insônia", "Energia boa", "Secreção (janela fértil)", "Dor nas relações"];
+// ============================================
+// CicloCuidar — ciclo.js
+// Registro de menstruação, sintomas e previsões
+// ⚠️ As previsões são orientativas — NÃO são método contraceptivo
+// ============================================
+
+const SINTOMAS = [
+  "Cólica",
+  "Dor de cabeça",
+  "Seios sensíveis",
+  "Inchaço",
+  "Alterações de humor",
+  "Cansaço",
+  "Acne",
+  "Sono alterado",
+  "Dor nas costas",
+  "Aumento do apetite"
+];
+
+// ---------- Sintomas ----------
 
 function montarSintomas() {
-  const div = document.getElementById("lista-sintomas");
-  div.innerHTML = SINTOMAS.map((s, i) =>
-    `<label><input type="checkbox" id="s${i}"> ${s}</label>`).join("");
-}
-
-async function registrarMenstruacao() {
-  const data = document.getElementById("data-menstruacao").value;
-  if (!data) return;
-  await salvar("ciclo", { data: data });
-  await calcularPrevisao();
-}
-
-async function calcularPrevisao() {
-  const registros = (await listar("ciclo")).sort((a, b) => a.data.localeCompare(b.data));
-  const div = document.getElementById("previsao");
-  if (registros.length < 2) {
-    div.innerHTML = "Registre pelo menos <b>2 ciclos</b> para receber estimativas.";
-    return;
-  }
-  // Média dos intervalos, descartando valores fora do fisiológico (15–60 dias)
-  const intervalos = [];
-  for (let i = 1; i < registros.length; i++) {
-    const dias = (new Date(registros[i].data) - new Date(registros[i-1].data)) / 86400000;
-    if (dias > 15 && dias < 60) intervalos.push(dias);
-  }
-  if (!intervalos.length) { div.innerHTML = "Ciclos muito irregulares — converse com a UBS."; return; }
-  const media = intervalos.reduce((a, b) => a + b) / intervalos.length;
-  const ultima = new Date(registros[registros.length - 1].data);
-  const proxima = new Date(ultima.getTime() + media * 86400000);
-  div.innerHTML = `Seu ciclo médio: <b>${Math.round(media)} dias</b>.<br>
-    Próxima menstruação (estimativa): <b>${proxima.toLocaleDateString("pt-BR")}</b>.
-    <p class="aviso" style="font-size:14px">⚠️ Estimativa simples — <b>não</b> é método
-    contraceptivo e não substitui avaliação médica.</p>`;
+  const lista = document.getElementById("lista-sintomas");
+  lista.innerHTML = SINTOMAS.map(
+    (s) => '<label><input type="checkbox" value="' + s + '"> ' + s + "</label>"
+  ).join("");
 }
 
 async function salvarSintomas() {
   const hoje = new Date().toISOString().slice(0, 10);
-  const marcados = SINTOMAS.filter((s, i) => document.getElementById("s" + i).checked);
-  await salvar("dias", { data: hoje, sintomas: marcados });
-  document.querySelectorAll("#lista-sintomas input").forEach(c => c.checked = false);
-  alert("Dia salvo no seu aparelho. ✔");
-  // Sinais de alerta da cartilha Fiocruz: dor nas relações pode sugerir endometriose
-  if (marcados.includes("Dor nas relações")) {
-    alert("Dor durante relações sexuais é um sintoma de endometriose. Vale conversar com a UBS — o diagnóstico demora em média 7 anos, e registrar seus sintomas ajuda a encurtar esse caminho.");
+  const marcados = Array.from(
+    document.querySelectorAll("#lista-sintomas input:checked")
+  ).map((i) => i.value);
+
+  // Se já existe registro de hoje, atualiza em vez de duplicar
+  const registros = await listar("sintomas");
+  const deHoje = registros.find((r) => r.data === hoje);
+  if (deHoje) {
+    deHoje.sintomas = marcados;
+    await apagar("sintomas", deHoje.id);
+    await salvar("sintomas", deHoje);
+  } else {
+    await salvar("sintomas", { data: hoje, sintomas: marcados });
   }
+
+  const feedback = document.createElement("p");
+  feedback.textContent = "✔ Seu dia foi salvo. Cuide-se! 🌸";
+  document.getElementById("lista-sintomas").after(feedback);
+  setTimeout(() => feedback.remove(), 2500);
+}
+
+// ---------- Registro do ciclo ----------
+
+async function registrarMenstruacao() {
+  const data = document.getElementById("data-menstruacao").value;
+  if (!data) {
+    alert("Escolha a data do primeiro dia da menstruação.");
+    return;
+  }
+  await salvar("ciclos", { data: data, registradoEm: new Date().toISOString() });
+  document.getElementById("data-menstruacao").value = "";
+  calcularPrevisao();
+}
+
+// ---------- Previsões ----------
+
+// Média dos últimos ciclos (mínimo 1, máximo 6), com padrão de 28 dias
+async function calcularPrevisao() {
+  const box = document.getElementById("previsao");
+  const registros = await listar("ciclos");
+  if (!box) return;
+
+  if (registros.length === 0) {
+    box.innerHTML =
+      "<p>Registre o primeiro dia da sua menstruação para começar a acompanhar seu ciclo. 🌱</p>";
+    return;
+  }
+
+  const datas = registros
+    .map((r) => r.data)
+    .sort();
+
+  // Duração média entre ciclos (se houver mais de um registro)
+  let duracao = 28;
+  if (datas.length >= 2) {
+    const intervalos = [];
+    for (let i = 1; i < datas.length; i++) {
+      const d1 = new Date(datas[i - 1]);
+      const d2 = new Date(datas[i]);
+      const dias = Math.round((d2 - d1) / 86400000);
+      if (dias > 15 && dias < 60) intervalos.push(dias); // ignora registros claramente errados
+    }
+    if (intervalos.length > 0) {
+      duracao = Math.round(intervalos.reduce((a, b) => a + b, 0) / intervalos.length);
+    }
+  }
+
+  const ultima = new Date(datas[datas.length - 1]);
+  const proximaMenstruacao = new Date(ultima.getTime() + duracao * 86400000);
+  const hoje = new Date();
+  const diasRestantes = Math.ceil(
+    (proximaMenstruacao - new Date(hoje.toISOString().slice(0, 10))) / 86400000
+  );
+
+  let mensagem;
+  if (diasRestantes > 0) {
+    mensagem =
+      "Sua próxima menstruação está prevista para <strong>" +
+      proximaMenstruacao.toLocaleDateString("pt-BR") +
+      "</strong> (em cerca de " + diasRestantes + " dia" + (diasRestantes > 1 ? "s" : "") + ").";
+  } else {
+    mensagem =
+      "Sua menstruação está prevista para <strong>hoje ou já começou</strong>. Que tal registrar?";
+  }
+
+  box.innerHTML =
+    "<h3>Sua previsão</h3>" +
+    "<p>" + mensagem + "</p>" +
+    '<p class="fonte">Previsão baseada na sua média de ' + duracao +
+    " dias. Ciclos variam naturalmente. <strong>Esta previsão NÃO é método contraceptivo.</strong></p>";
 }
