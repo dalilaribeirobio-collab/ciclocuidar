@@ -1,7 +1,7 @@
 // ============================================
 // CicloCuidar — sw.js (Service Worker)
 // Cache offline · caminhos relativos (GitHub Pages)
-// Versão do cache: v6 — altere este número a cada atualização!
+// Versão do cache: v7 — altere este número a cada atualização!
 // ============================================
 
 const VERSAO_CACHE = "croclocuidar-v6";
@@ -15,6 +15,7 @@ const ARQUIVOS = [
   "js/banco.js",
   "js/ciclo.js",
   "js/violentometro.js",
+  "js/quiz.js",
   "js/app.js",
   "https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
 ];
