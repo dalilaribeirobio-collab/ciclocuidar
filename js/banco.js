@@ -5,8 +5,9 @@
 
 const NOME_BANCO = "croclocuidar";
 const VERSAO_BANCO = 2; // v2: loja "config" para o PIN personalizado
+const VERSAO_BANCO = 3; // v3: loja "quiz"
+const LOJAS = ["ciclos", "sintomas", "violentometro", "config", "quiz"];
 
-const LOJAS = ["ciclos", "sintomas", "violentometro", "config"];
 
 let banco = null;
 
