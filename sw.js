@@ -4,7 +4,7 @@
 // Versão do cache: v7 — altere este número a cada atualização!
 // ============================================
 
-const VERSAO_CACHE = "croclocuidar-v6";
+const VERSAO_CACHE = "croclocuidar-v7";
 
 // Todos os arquivos do app (caminhos RELATIVOS — obrigatório no GitHub Pages)
 const ARQUIVOS = [
