@@ -17,13 +17,25 @@
   <h1>CicloCuidar</h1>
   <button class="btn-sair" onclick="sairRapido()" aria-label="Saída rápida">✕</button>
 </header>
-  <!-- Tela de PIN (modo discreto) -->
-  <div id="tela-pin" class="tela">
-    <h2>Digite seu PIN</h2>
-    <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
-    <button onclick="verificarPin()">Entrar</button>
-    <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
-  </div>
+ <!-- Tela de criação de PIN (primeiro acesso) -->
+<div id="tela-criar-pin" class="tela" hidden>
+  <h2>Crie seu PIN</h2>
+  <p class="intro">Escolha um PIN de 4 dígitos. Ele protege seus registros —
+     ninguém além de você consegue vê-los.</p>
+  <input type="password" id="novo-pin" maxlength="4" inputmode="numeric" placeholder="Novo PIN" aria-label="Novo PIN de 4 dígitos">
+  <input type="password" id="confirmar-pin" maxlength="4" inputmode="numeric" placeholder="Repita o PIN" aria-label="Repita o PIN">
+  <button onclick="criarPin()">Definir meu PIN</button>
+  <p id="erro-criar" class="aviso" hidden></p>
+</div>
+
+<!-- Tela de login -->
+<div id="tela-pin" class="tela" hidden>
+  <h2>Digite seu PIN</h2>
+  <input type="password" id="pin" maxlength="4" inputmode="numeric" aria-label="PIN de 4 dígitos">
+  <button onclick="verificarPin()">Entrar</button>
+  <button class="btn-link" onclick="mostrarTrocarPin()">Esqueci / trocar PIN</button>
+  <p id="erro-pin" class="aviso" hidden>PIN incorreto</p>
+</div>
 
   <!-- App principal -->
   <div id="app" class="tela" hidden>
