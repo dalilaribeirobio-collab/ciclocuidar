@@ -1,21 +1,16 @@
-/* ============================================
-   CicloCuidar — Identidade "Aconchego"
-   Paleta rosada-terrosa · Tipografia delicada
-   Acessibilidade: alvos ≥44px, contraste WCAG AA
-   ============================================ */
-
+/* CicloCuidar — Identidade "Aconchego" */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 
 :root {
-  --fundo: #fdf6f0;          /* creme rosado */
-  --cartao: #fffdf9;          /* branco quente */
-  --acao: #c26584;            /* rosa antigo */
-  --acao-press: #a84e6e;      /* rosa pressionado */
-  --texto: #5d3a4a;           /* terracota escura */
-  --texto-suave: #8c6b78;     /* texto secundário */
-  --aba: #f7e3dd;             /* pêssego (aba inativa) */
+  --fundo: #fdf6f0;
+  --cartao: #fffdf9;
+  --acao: #c26584;
+  --acao-press: #a84e6e;
+  --texto: #5d3a4a;
+  --texto-suave: #8c6b78;
+  --aba: #f7e3dd;
   --borda-suave: #f0dcd6;
-  --alerta: #b03a5b;          /* framboesa (avisos) */
+  --alerta: #b03a5b;
 }
 
 * { box-sizing: border-box; }
@@ -29,28 +24,19 @@ body {
   color: var(--texto);
 }
 
-/* Estrutura geral */
 .tela { max-width: 480px; margin: 0 auto; padding: 24px 20px; }
 
-/* Cabeçalho */
-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 0 16px;
-  border-bottom: 1px solid var(--borda-suave);
-}
-header h1 {
-  font-size: 26px; font-weight: 700; color: var(--acao);
-  letter-spacing: 0.5px; margin: 0;
-}
+header { display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0 16px; border-bottom: 1px solid var(--borda-suave); }
+header h1 { font-size: 26px; font-weight: 700; color: var(--acao); margin: 0; }
 
-/* Botões e abas: cápsulas arredondadas, toque acolhedor */
 button, .aba {
   min-height: 48px; padding: 12px 20px;
   border: none; border-radius: 24px;
   background: var(--acao); color: #fff;
   font-weight: 600; font-family: 'Quicksand', sans-serif;
   font-size: 16px; cursor: pointer;
-  box-shadow: 0 2px 8px rgba(194, 101, 132, .25);
+  box-shadow: 0 2px 8px rgba(194,101,132,.25);
   transition: background .15s ease, transform .1s ease;
 }
 button:active { background: var(--acao-press); transform: scale(.98); }
@@ -58,39 +44,26 @@ button:active { background: var(--acao-press); transform: scale(.98); }
 .btn-sair { background: transparent; color: var(--acao); font-size: 24px;
   box-shadow: none; min-width: 44px; }
 
-/* Navegação por abas */
 .abas { display: flex; gap: 8px; margin: 16px 0 20px; }
-.aba { background: var(--aba); color: var(--acao); box-shadow: none; font-weight: 600; }
-.aba.ativa { background: var(--acao); color: #fff; }
+.abas .aba { background: var(--aba); color: var(--acao); box-shadow: none; }
+.abas .aba.ativa { background: var(--acao); color: #fff; }
 
-/* Cartões */
-.card {
-  background: var(--cartao);
-  border-radius: 20px;
-  padding: 18px;
-  margin: 12px 0;
-  box-shadow: 0 3px 12px rgba(140, 107, 120, .12);
-  border: 1px solid var(--borda-suave);
-}
+.card { background: var(--cartao); border-radius: 20px; padding: 18px;
+  margin: 12px 0; box-shadow: 0 3px 12px rgba(140,107,120,.12);
+  border: 1px solid var(--borda-suave); }
 
-/* Textos */
 .aviso { color: var(--alerta); }
 .fonte { font-size: 14px; color: var(--texto-suave); margin-top: 20px; }
-.intro {
-  background: var(--aba); padding: 12px 14px; border-radius: 14px;
-  font-size: 16px; line-height: 1.5; color: var(--texto);
-}
+.intro { background: var(--aba); padding: 12px 14px; border-radius: 14px;
+  font-size: 16px; line-height: 1.5; }
 
-/* Checkbox-labels (sintomas e Violentômetro) */
 .sintomas label, #perguntas-vio label {
   display: block; padding: 12px 10px; margin: 6px 0;
   background: var(--cartao); border-radius: 14px;
   border: 1px solid var(--borda-suave);
-  transition: background .15s ease;
 }
 .sintomas label:active, #perguntas-vio label:active { background: var(--aba); }
 
-/* Campos de entrada */
 input[type="date"], input[type="password"] {
   padding: 12px; border-radius: 14px;
   border: 2px solid var(--acao);
@@ -100,23 +73,22 @@ input[type="date"], input[type="password"] {
 }
 input:focus { outline: 3px solid var(--aba); border-color: var(--acao-press); }
 
-/* Botão de emergência 180 */
-.btn-180 {
-  display: block; text-align: center; padding: 14px; margin: 20px 0;
-  background: #fbe9ec; color: var(--alerta);
-  border-radius: 24px; text-decoration: none; font-weight: bold;
-  border: 1px solid var(--alerta);
-}
+.btn-180 { display: block; text-align: center; padding: 14px; margin: 20px 0;
+  background: #fbe9ec; color: var(--alerta); border-radius: 24px;
+  text-decoration: none; font-weight: bold; border: 1px solid var(--alerta); }
 
-/* Botão-link discreto (esqueci/trocar PIN) */
 .btn-link { background: transparent; color: var(--acao);
   text-decoration: underline; min-height: 44px; box-shadow: none; }
 
-/* Domínios do Violentômetro — gravidade mantida, tons suavizados */
-.dom-cuidado { border-left: 6px solid #f6c453; border-radius: 8px; }
-.dom-reakao  { border-left: 6px solid #f0a868; border-radius: 8px; }
-.dom-perigo  { border-left: 6px solid var(--alerta); border-radius: 8px; }
+.dom-cuidado { border-left: 6px solid #f6c453; }
+.dom-reakao  { border-left: 6px solid #f0a868; }
+.dom-perigo   { border-left: 6px solid var(--alerta); }
 
-/* Títulos internos */
 h2 { color: var(--acao); font-size: 22px; font-weight: 700; }
 h3 { color: var(--acao-press); font-size: 18px; font-weight: 600; }
+
+/* Estilos dos botões de opções do quiz usados inline */
+#quiz-lista button.aba, #quiz-pergunta button.aba,
+#lista-artigos button.aba {
+  display: block; margin: 8px 0; text-align: left;
+}
