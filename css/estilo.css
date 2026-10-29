@@ -21,6 +21,8 @@ input[type="date"], input[type="password"] { padding: 12px; border-radius: 8px;
 .btn-180 { display: block; text-align: center; padding: 14px; margin: 20px 0;
   background: #ffebee; color: #c62828; border-radius: 8px; text-decoration: none; font-weight: bold; }
 .intro { background: #ede7f6; padding: 10px; border-radius: 8px; font-size: 16px; }
+.btn-link { background: transparent; color: #5e35b1; text-decoration: underline;
+  min-height: 44px; }
 /* Domínios do Violentômetro (cores da escala de gravidade do TJPB) */
 .dom-cuidado { border-left: 6px solid #fbc02d; }
 .dom-reakao { border-left: 6px solid #fb8c00; }
