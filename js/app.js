@@ -114,7 +114,15 @@ window.addEventListener("load", () => {
   montarSintomas();
   montarViolentometro();
   montarBiblioteca();
-  if (sessionStorage.getItem("sessao") === "ok") entrar();
-  // Registra o service worker (modo offline)
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js");
+
+  // Decide qual tela mostrar: criar PIN (primeiro uso) ou login
+  obterPinSalvo().then((hash) => {
+    if (sessionStorage.getItem("sessao") === "ok") {
+      document.getElementById("app").hidden = false;
+      calcularPrevisao();
+    } else {
+      document.getElementById(hash ? "tela-pin" : "tela-criar-pin").hidden = false;
+    }
+  });
 });
